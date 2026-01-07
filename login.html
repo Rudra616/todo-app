@@ -1,8 +1,20 @@
-<h2>Login</h2>
-<p class="error"></p>
+<div class="row mb-3">
 
-<input type="text" class="username" placeholder="Username">
-<input type="password" class="password" placeholder="Password">
-<button class="login">Login</button>
+  <h2>Login</h2>
+</div>
 
-<a href="register.html" class="ajax-link">Register</a>
+<div class="mb-3 mt-3">
+  <label for="Username" class="form-label">Username:</label>
+  <input type="text" id="username" class="form-control" placeholder="Enter username" name="email">
+</div>
+<div class="mb-3">
+  <label for="pwd" class="form-label">Password:</label>
+  <input type="password" id="password" class="form-control" placeholder="Password" name="password">
+</div>
+<div id="errorMsg" class="alert alert-danger d-none" role="alert"></div>
+
+<button type="submit" id="login" class="btn btn-primary w-100 ">Login</button>
+
+<div class="text-center mt-3">
+  <a href="register.html" class="ajax-link">Register</a>
+</div>

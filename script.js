@@ -14,20 +14,28 @@ $(document).ready(function () {
     });
 
     // REGISTER
-    $(document).on("click", ".register", function () {
-        const username = $(".username").val().trim();
-        const password = $(".password").val().trim();
-        $(".error").text("");
+    $(document).on("click", "#register", function (e) {
+        e.preventDefault();
+
+        const username = $("#username").val().trim();
+        const password = $("#password").val().trim();
+        const errorMsg = $("#errorMsg");
+
+        errorMsg.text("").addClass("d-none");
 
         if (!username || !password) {
-            $(".error").text("All fields required");
+            errorMsg
+                .text("All fields are required.")
+                .removeClass("d-none");
             return;
         }
 
         let users = JSON.parse(localStorage.getItem("users")) || [];
 
         if (users.some(u => u.username === username)) {
-            $(".error").text("Username already exists");
+            errorMsg
+                .text("Username already exists.")
+                .removeClass("d-none");
             return;
         }
 
@@ -37,11 +45,23 @@ $(document).ready(function () {
         $("#content").load("login.html");
     });
 
+
     // LOGIN
-    $(document).on("click", ".login", function () {
-        const username = $(".username").val().trim();
-        const password = $(".password").val().trim();
-        $(".error").text("");
+    $(document).on("click", "#login", function (e) {
+        e.preventDefault();
+
+        const username = $("#username").val().trim();
+        const password = $("#password").val().trim();
+        const errorMsg = $("#errorMsg");
+
+        errorMsg.text("").addClass("d-none");
+
+        if (username === "" || password === "") {
+            errorMsg
+                .text("All fields are required.")
+                .removeClass("d-none");
+            return;
+        }
 
         let users = JSON.parse(localStorage.getItem("users")) || [];
         let user = users.find(u => u.username === username && u.password === password);
@@ -50,9 +70,12 @@ $(document).ready(function () {
             localStorage.setItem("loggedInUser", username);
             loadDashboard();
         } else {
-            $(".error").text("Invalid username or password");
+            errorMsg
+                .text("Invalid username or password.")
+                .removeClass("d-none");
         }
     });
+
 
     // LOGOUT
     $(document).on("click", ".logout", function () {
@@ -71,7 +94,8 @@ $(document).ready(function () {
 
         tasks[username].push({
             text: taskText,
-            date: new Date().toLocaleDateString()
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString()
         });
 
         localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -86,6 +110,18 @@ $(document).ready(function () {
             loadTasks();
         });
     }
+    $(document).on("click", ".deleteTask", function () {
+        const index = $(this).data("index");
+        const username = localStorage.getItem("loggedInUser");
+
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || {};
+        tasks[username].splice(index, 1);
+
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        loadTasks();
+    }); $(document).on("click", ".editTask", function () {
+        console.log("edit click")
+    });
 
     function loadTasks() {
         const username = localStorage.getItem("loggedInUser");
@@ -94,11 +130,16 @@ $(document).ready(function () {
 
         $("#taskTable").html("");
 
-        userTasks.forEach(task => {
+        userTasks.forEach((task, index) => {
             $("#taskTable").append(`
                 <tr>
                     <td>${task.text}</td>
                     <td>${task.date}</td>
+                    <td>${task.time}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-warning editTask" data-index="${index}">Edit</button>
+                        <button class="btn btn-sm btn-danger deleteTask" data-index="${index}">Delete</button>
+                    </td>
                 </tr>
             `);
         });
