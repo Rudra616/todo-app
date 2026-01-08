@@ -13,19 +13,30 @@ $(document).ready(function () {
         $("#content").load($(this).attr("href"));
     });
 
+    $(document).on("click", ".toggle-password", function () {
+        const target = $($(this).data("target"));
+        const type = target.attr("type") === "password" ? "text" : "password";
+        target.attr("type", type);
+    });
+
     // REGISTER
     $(document).on("click", "#register", function (e) {
         e.preventDefault();
 
         const username = $("#username").val().trim();
         const password = $("#password").val().trim();
+        const confirmPassword = $("#confirmPassword").val().trim();
         const errorMsg = $("#errorMsg");
 
         errorMsg.text("").addClass("d-none");
 
-        if (!username || !password) {
-            errorMsg
-                .text("All fields are required.")
+        if (!username || !password || !confirmPassword) {
+            errorMsg.text("All fields are required.").removeClass("d-none");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            errorMsg.text("Password and Confirm Password do not match.")
                 .removeClass("d-none");
             return;
         }
@@ -33,8 +44,7 @@ $(document).ready(function () {
         let users = JSON.parse(localStorage.getItem("users")) || [];
 
         if (users.some(u => u.username === username)) {
-            errorMsg
-                .text("Username already exists.")
+            errorMsg.text("Username already exists.")
                 .removeClass("d-none");
             return;
         }
@@ -90,13 +100,23 @@ $(document).ready(function () {
 
         const username = localStorage.getItem("loggedInUser");
         let tasks = JSON.parse(localStorage.getItem("tasks")) || {};
-        if (!tasks[username]) tasks[username] = [];
+        tasks[username] = tasks[username] || [];
 
-        tasks[username].push({
-            text: taskText,
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString()
-        });
+        if (editIndex !== null) {
+            tasks[username][editIndex].text = taskText;
+            tasks[username][editIndex].updatedAt =
+                new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+
+            editIndex = null;
+            $("#submitTask").text("Submit");
+        } else {
+            tasks[username].push({
+                text: taskText,
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString(),
+                updatedAt: "-"
+            });
+        }
 
         localStorage.setItem("tasks", JSON.stringify(tasks));
         $("#enterTask").val("");
@@ -119,8 +139,24 @@ $(document).ready(function () {
 
         localStorage.setItem("tasks", JSON.stringify(tasks));
         loadTasks();
-    }); $(document).on("click", ".editTask", function () {
-        console.log("edit click")
+    });
+
+    let editIndex = null;
+
+    $(document).on("click", ".editTask", function () {
+        const index = $(this).data("index")
+        const username = localStorage.getItem("loggedInUser");
+
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || {}
+        const userTasks = tasks[username]
+
+        $("#enterTask").val(userTasks[index].text)
+
+        editIndex = index
+
+        $("#submitTask").text("Update Task");
+
+
     });
 
     function loadTasks() {
@@ -136,9 +172,17 @@ $(document).ready(function () {
                     <td>${task.text}</td>
                     <td>${task.date}</td>
                     <td>${task.time}</td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-warning editTask" data-index="${index}">Edit</button>
-                        <button class="btn btn-sm btn-danger deleteTask" data-index="${index}">Delete</button>
+                    <td>${task.updatedAt || "-"}</td>
+
+                    <td class="text-center gap-2">
+                    <div class="d-flex flex-column flex-md-row gap-2 justify-content-center">
+                        <button class="btn btn-sm btn-warning editTask" data-index="${index}">
+                            Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger deleteTask" data-index="${index}">
+                            Delete
+                        </button>
+                    </div>
                     </td>
                 </tr>
             `);

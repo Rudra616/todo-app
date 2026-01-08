@@ -1,0 +1,32 @@
+.editTask {
+    width: 65px;
+}
+
+.form-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form h2 {
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: 6px;
+}
+
+.btn-primary {
+    border-radius: 6px;
+}
