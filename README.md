@@ -1,229 +1,189 @@
-This is a simple Task Manager Web Application built using HTML, CSS, Bootstrap 5, JavaScript, and jQuery.
-It allows users to register, login, logout, and manage tasks (add, edit, delete) without reloading the page.
+⭐ Task Manager Web Application
+
+A simple Task Manager Web Application built using HTML, CSS, Bootstrap 5, JavaScript, and jQuery.
+It allows users to register, login, logout, and manage tasks (add, edit, delete) without page reload.
 All data is stored in the browser using LocalStorage.
 
-**Clone/download the project.
+⭐ 1. How to Run the Project
 
-Open folder → right-click index.html → Open with Live Server.
+➤ Clone or download the project
+➤ Open the project folder
+➤ Right-click index.html → Open with Live Server
+➤ Register a new account
+➤ Login
+➤ Add / Edit / Delete tasks
+➤ Logout to test session removal
 
-Register a new account.
+⭐ 2. Project Files Structure
 
-Login.
+📁 index.html
+→ Main file, loads other pages dynamically inside #content
 
-Add, edit, delete tasks.
+📁 login.html
+→ Login form page
 
-Logout to test session removal.**
+📁 register.html
+→ Registration form page
 
-**1. Project Files
-**
-index.html → Main file. Loads other pages dynamically in the #content div.
+📁 dashboard.html
+→ User dashboard and task management
 
-login.html → Login form page, loaded dynamically.
+📁 script.js
+→ All JavaScript & jQuery logic
 
-register.html → Registration form page, loaded dynamically.
+📁 style.css
+→ Custom styling for forms, tables, and buttons
 
-dashboard.html → Dashboard page, shows user tasks, allows add/edit/delete tasks.
+📁 Bootstrap 5
+→ Responsive UI framework
 
-script.js → Contains all JavaScript/jQuery logic.
+⭐ 3. Application Flow
 
-style.css → Contains custom CSS for forms, tables, and buttons.
+➊ Open index.html
+➋ Check LocalStorage for logged-in user
+➤ If user exists → load dashboard
+➤ If not → load login page
+➌ Switch pages using jQuery .load() (no reload)
+➍ Login loads user-specific tasks
+➎ Users can add, edit, delete tasks
+➏ Logout clears session and redirects to login
 
-Bootstrap 5 → Used for responsive design.
-
-**2. Application Flow
-**
-Open index.html.
-
-Check LocalStorage for a logged-in user.
-
-If found → load dashboard.
-
-If not → load login page.
-
-Navigation between login and register pages happens without page reload using jQuery .load().
-
-After login → dashboard loads tasks for the current user.
-
-Users can add, edit, delete tasks.
-
-Logout → session ends, login page loads.
-
-**3. Important Methods, Functions, and What They Do
-**
+⭐ 4. Important Methods & Usage
 🔹 LocalStorage Methods
 
-localStorage.getItem(key)
-
-Reads data from LocalStorage.
-
-Used to check logged-in user, users list, and tasks.
-
+★ localStorage.getItem(key)
+→ Reads data from LocalStorage
 Example: localStorage.getItem("loggedInUser")
 
-localStorage.setItem(key, value)
-
-Saves data in LocalStorage.
-
-Used to store registered users, tasks, and logged-in user.
-
+★ localStorage.setItem(key, value)
+→ Saves data to LocalStorage
 Example: localStorage.setItem("tasks", JSON.stringify(tasks))
 
-localStorage.removeItem(key)
+★ localStorage.removeItem(key)
+→ Removes stored data
+Used during logout
 
-Removes a key from LocalStorage.
+🔹 JSON Methods
 
-Used for logout: localStorage.removeItem("loggedInUser")
+★ JSON.parse()
+→ Converts JSON string to JavaScript object
 
-**🔹 JSON Methods
-**
-JSON.parse(string)
+★ JSON.stringify()
+→ Converts JavaScript object to JSON string
 
-Converts a JSON string from LocalStorage into a JavaScript object.
+🔹 Array Methods
 
-Used for reading users or tasks:
-let users = JSON.parse(localStorage.getItem("users"))
+★ Array.some()
+→ Checks if a condition exists in array
+Used to validate unique usernames
 
-JSON.stringify(object)
+★ Array.splice(index, 1)
+→ Removes task from list
 
-Converts a JavaScript object into a JSON string to save in LocalStorage.
+★ Array.forEach()
+→ Displays tasks dynamically
 
-Example: localStorage.setItem("tasks", JSON.stringify(tasks))
+🔹 jQuery Methods
 
-**🔹 Array Methods
-**
-Array.some()
+★ .on("click", selector, function)
+→ Handles click events for dynamic content
 
-Checks if any element in an array satisfies a condition. Returns true/false.
+★ .load("page.html")
+→ Loads pages without reload
 
-Used to check if username already exists during registration:
-users.some(u => u.username === username)
+★ .attr()
+→ Gets or sets element attributes
 
-Array.splice(index, 1)
+★ .addClass() / .removeClass()
+→ Shows or hides messages dynamically
 
-Removes an element from an array at a given index.
+🔹 String & Date Methods
 
-Used to delete tasks: tasks[username].splice(index, 1)
+★ trim()
+→ Removes extra spaces from input
 
-Array.forEach()
+★ new Date().toLocaleDateString()
+→ Returns current date
 
-Iterates over an array.
+★ new Date().toLocaleTimeString()
+→ Returns current time
 
-Used to display each task in the task table dynamically.
+⭐ 5. Key Variables
 
-**🔹 jQuery Methods
-**
-.on("click", selector, function)
+★ loggedInUser
+→ Stores current logged-in user
 
-Attach click events, works even on dynamically loaded elements.
+★ users
+→ Stores all registered users
 
-Used for login, register, logout, add/edit/delete tasks, and page navigation.
+★ tasks
+→ Stores tasks for each user
 
-.load("page.html")
+★ editIndex
+→ Tracks task editing state
 
-Loads HTML content into a container without reloading the page.
+⭐ 6. Functional Overview
+🔹 Registration
 
-Used for dynamic page switching between login, register, and dashboard.
+✔ Validates all inputs
+✔ Checks password match
+✔ Ensures unique username
+✔ Saves user in LocalStorage
+✔ Redirects to login page
 
-.attr(attribute)
+🔹 Login
 
-Get or set attributes of HTML elements.
+✔ Validates credentials
+✔ Saves session in LocalStorage
+✔ Loads dashboard on success
+✔ Shows error on failure
 
-Used for toggling password visibility: target.attr("type", type)
+🔹 Logout
 
-.addClass() / .removeClass()
+✔ Clears session
+✔ Redirects to login page
 
-Dynamically add or remove CSS classes.
+🔹 Dashboard
 
-Used to show/hide error messages:
-errorMsg.removeClass("d-none") → show
-errorMsg.addClass("d-none") → hide
+★ loadDashboard()
+→ Loads dashboard & username
+→ Calls loadTasks()
 
-**🔹 String Methods
-**
-trim()
+★ loadTasks()
+→ Displays user tasks
+→ Adds Edit & Delete buttons
 
-Removes whitespace from beginning and end of a string.
+🔹 Add Task
 
-Used for input validation: $("#username").val().trim()
+✔ Adds new task with date & time
+✔ Saves task to LocalStorage
+✔ Refreshes task list
 
-**🔹 Date Methods
-**
-new Date().toLocaleDateString() → returns current date
+🔹 Edit Task
 
-new Date().toLocaleTimeString() → returns current time
+✔ Loads task into input field
+✔ Updates task text & timestamp
+✔ Resets edit mode
 
-Used to store task creation and update time.
+🔹 Delete Task
 
-**4. Key Variables
-**
-loggedInUser → Stores current logged-in username.
+✔ Removes task using splice()
+✔ Updates LocalStorage
+✔ Refreshes task list
 
-users → Array of all registered users.
+⭐ 7. Technologies Used
 
-tasks → Object storing tasks for each user.
+🔹 HTML
+🔹 CSS
+🔹 Bootstrap 5
+🔹 JavaScript
+🔹 jQuery
+🔹 LocalStorage
 
-editIndex → Tracks which task is being edited. Null means no task is being edited.
+⭐ 8. Features
 
-**5. Functional Overview
-🔹 Registration**
-
-User clicks Register → prevent default reload.
-
-Input validation: all fields required, passwords match, username must be unique.
-
-Save user in LocalStorage.
-
-Redirect to login page.
-
-Show errors using #errorMsg if validation fails.
-
-**🔹 Login
-**
-User clicks Login → prevent reload.
-
-Check credentials from LocalStorage.
-
-If valid → save loggedInUser and load dashboard.
-
-If invalid → show error message.
-
-**🔹 Logout
-**
-User clicks Logout.
-
-Remove loggedInUser from LocalStorage.
-
-Load login page.
-
-**🔹 Dashboard
-**
-loadDashboard() → Load dashboard page, show username, call loadTasks().
-
-loadTasks() → Load all tasks for the current user from LocalStorage, display in table with Edit/Delete buttons.
-
-**🔹 Add Task
-**
-User enters task and clicks Submit.
-
-If editIndex is null → create new task with date, time, updatedAt = "-".
-
-Save task in LocalStorage.
-
-Clear input and reload task table.
-
-**🔹 Edit Task
-**
-Click Edit → load task text into input, store index in editIndex.
-
-Change button text to "Update Task".
-
-Update task text, updatedAt, reset editIndex, change button back to "Submit".
-
-**🔹 Delete Task
-**
-Click Delete → remove task from array using splice().
-
-Update LocalStorage.
-
-Reload task table.
-
+✔ User Authentication
+✔ Dynamic Page Loading
+✔ CRUD Operations on Tasks
+✔ Session Management
+✔ No Backend Required
